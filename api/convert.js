@@ -13,11 +13,16 @@ module.exports = async (req, res) => {
     let txtContent = response.data;
 
     txtContent = txtContent.replace(/<[^>]*>/g, "");
+
+    txtContent = txtContent.replace(/(Notice:.*?<\/font>)/g, "");
+    txtContent = txtContent.replace(/<font[^>]*>.*?<\/font>/g, "");
+
     res.setHeader("Content-Type", "application/x-mpegURL");
     res.setHeader(
       "Content-Disposition",
       'attachment; filename="converted.m3u8"'
     );
+
     res.send(txtContent);
   } catch (error) {
     console.error(error);
