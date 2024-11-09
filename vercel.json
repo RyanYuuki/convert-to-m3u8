@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/convert-to-m3u8.js",
+      "src": "api/convert.js",
       "use": "@vercel/node"
     }
   ]
