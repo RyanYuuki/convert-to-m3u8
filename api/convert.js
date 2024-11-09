@@ -10,14 +10,14 @@ module.exports = async (req, res) => {
     const decodedUrl = decodeURIComponent(txtUrl);
 
     const response = await axios.get(decodedUrl);
-    const txtContent = response.data;
+    let txtContent = response.data;
 
+    txtContent = txtContent.replace(/<[^>]*>/g, "");
     res.setHeader("Content-Type", "application/x-mpegURL");
     res.setHeader(
       "Content-Disposition",
       'attachment; filename="converted.m3u8"'
     );
-
     res.send(txtContent);
   } catch (error) {
     console.error(error);
