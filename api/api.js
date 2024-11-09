@@ -4,7 +4,7 @@ const path = require("path");
 
 module.exports = async (req, res) => {
   if (req.method === "GET") {
-    const { fileUrl } = req.query;
+    const { fileUrl, lang, cache } = req.query;
 
     if (!fileUrl) {
       return res
@@ -16,6 +16,11 @@ module.exports = async (req, res) => {
       const response = await axios.get(fileUrl, { responseType: "text" });
 
       const fileName = path.basename(fileUrl, ".txt") + ".m3u8";
+      console.log(
+        `Language: ${lang || "not specified"}, Cache: ${
+          cache || "not specified"
+        }`
+      );
 
       const tempFilePath = path.join("/tmp", fileName);
       fs.writeFileSync(tempFilePath, response.data);
