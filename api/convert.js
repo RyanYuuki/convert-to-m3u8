@@ -9,24 +9,37 @@ module.exports = async (req, res) => {
 
     const decodedUrl = decodeURIComponent(txtUrl);
 
-    const response = await axios.get(decodedUrl);
+    const response = await axios.get(decodedUrl, {
+      responseType: "text",
+      headers: {
+        "User-Agent": "Mozilla/5.0",
+      },
+    });
+
+    if (response.status !== 200) {
+      return res
+        .status(response.status)
+        .send("Failed to fetch the .m3u8 file.");
+    }
+
     let txtContent = response.data;
 
-    // Strip everything before the first occurrence of "#EXTM3U"
     const indexOfExtM3U = txtContent.indexOf("#EXTM3U");
     if (indexOfExtM3U !== -1) {
       txtContent = txtContent.substring(indexOfExtM3U);
+    } else {
+      return res
+        .status(400)
+        .send("Invalid .m3u8 content: Missing #EXTM3U header.");
     }
 
-    res.setHeader("Content-Type", "application/x-mpegURL");
-    res.setHeader(
-      "Content-Disposition",
-      'attachment; filename="converted.m3u8"'
-    );
+    res.setHeader("Content-Type", "application/vnd.apple.mpegurl");
+    res.setHeader("Content-Disposition", 'attachment; filename="master.m3u8"');
+    res.setHeader("Access-Control-Allow-Origin", "*");
 
     res.send(txtContent);
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching or processing the file:", error.message);
     res.status(500).send("Error fetching or processing the file.");
   }
 };

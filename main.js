@@ -13,10 +13,7 @@ app.get("/convert", async (req, res) => {
     const txtContent = response.data;
 
     res.setHeader("Content-Type", "application/x-mpegURL");
-    res.setHeader(
-      "Content-Disposition",
-      'attachment; filename="converted.m3u8"'
-    );
+    res.setHeader("Content-Disposition", 'attachment; filename="master.m3u8"');
 
     res.send(txtContent);
   } catch (error) {
