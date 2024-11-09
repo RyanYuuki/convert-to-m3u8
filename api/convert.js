@@ -7,7 +7,9 @@ module.exports = async (req, res) => {
       return res.status(400).send("URL parameter is required");
     }
 
-    const response = await axios.get(txtUrl);
+    const decodedUrl = decodeURIComponent(txtUrl);
+
+    const response = await axios.get(decodedUrl);
     const txtContent = response.data;
 
     res.setHeader("Content-Type", "application/x-mpegURL");
