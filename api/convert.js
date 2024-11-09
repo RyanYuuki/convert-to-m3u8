@@ -12,10 +12,11 @@ module.exports = async (req, res) => {
     const response = await axios.get(decodedUrl);
     let txtContent = response.data;
 
-    txtContent = txtContent.replace(/<[^>]*>/g, "");
-
-    txtContent = txtContent.replace(/(Notice:.*?<\/font>)/g, "");
-    txtContent = txtContent.replace(/<font[^>]*>.*?<\/font>/g, "");
+    // Strip everything before the first occurrence of "#EXTM3U"
+    const indexOfExtM3U = txtContent.indexOf("#EXTM3U");
+    if (indexOfExtM3U !== -1) {
+      txtContent = txtContent.substring(indexOfExtM3U);
+    }
 
     res.setHeader("Content-Type", "application/x-mpegURL");
     res.setHeader(
